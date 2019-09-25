@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+	<persistence-unit name="psim">
+
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<!-- <jta-data-source>java:jboss/datasources/PsimDS</jta-data-source> -->
+
+		<!-- <mapping-file>META-INF/rbac-orm.xml</mapping-file> -->
+		<!-- <mapping-file>META-INF/BbtsBpmOrm.xml</mapping-file> -->
+		<!-- <mapping-file>META-INF/JBPMorm.xml</mapping-file> -->
+		<!-- <mapping-file>META-INF/Taskorm.xml</mapping-file> -->
+		<!-- <mapping-file>META-INF/named-jpql-query.xml</mapping-file> -->
+		<!-- <mapping-file>META-INF/named-native-query.xml</mapping-file> -->
+		<!-- <mapping-file>META-INF/named-stored-procedure.xml</mapping-file> -->
+
+		<!-- Módulo RBAC -->
+		<!-- <jar-file>bbts-rbac-core.jar</jar-file> -->
+		<!-- <jar-file>psim-ejb-2.4.187.jar</jar-file> -->
+
+		<!-- https://docs.jboss.org/hibernate/entitymanager/3.5/reference/en/html/configuration.html -->
+		<!-- Use of this one in Java SE should be considered as non portable, in -->
+		<!-- this case a absolute url is needed. You can alternatively point to 
+			a -->
+		<!-- directory (This is especially useful when in your test environment, -->
+		<!-- the persistence.xml file is not under the same root directory or jar -->
+		<!-- than your domain model). -->
+		<jar-file>file:C:\kdi-BBTS-4.8\workspace-neon\2.4_psim\psim-ejb</jar-file>
+
+		<properties>
+
+			<!-- dados da conexao -->
+			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver" />
+			<property name="hibernate.connection.url" value="jdbc:oracle:thin:@10.8.1.212:1521:dsv1" />
+			<property name="hibernate.connection.username" value="psim4_tst" />
+			<property name="hibernate.connection.password" value="psim" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.format_sql" value="false" />
+			<property name="hibernate.use_sql_comments" value="false" />
+
+			<!-- Size for Hibernate batch fetching of associations. -->
+			<!-- <property name="hibernate.batch_fetch_style" value="DYNAMIC" /> -->
+			<!-- <property name="hibernate.default_batch_fetch_size" value="16" /> -->
+
+<!-- 			<property name="hibernate.hbm2ddl.auto" value="validate" /> -->
+
+			<!-- Query -->
+			<property name="hibernate.query.substitutions" value="true 1, false 0" />
+			<property name="hibernate.transaction.jta.platform"
+				value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />
+
+			<!-- BBTS-BPM -->
+			<!-- <property name="jboss.as.jpa.providerModule" value="org.hibernate" 
+				/> -->
+
+			<!-- cache -->
+			<!-- <property name="hibernate.cache.use_second_level_cache" value="true" 
+				/> -->
+			<!-- <property name="hibernate.cache.use_query_cache" value="true" /> -->
+
+			<!-- Tempo para cache caso a entidade/query fique inativa por até X minutos. -->
+			<property name="hibernate.cache.infinispan.entity.expiration.lifespan"
+				value="900000" /> <!-- 15 minutos -->
+			<property name="hibernate.cache.infinispan.query.expiration.lifespan"
+				value="900000" /> <!-- 15 minutos -->
+
+			<!-- habilitar estatisticas hibernate -->
+			<property name="hibernate.generate_statistics" value="false" />
+
+		</properties>
+
+	</persistence-unit>
+</persistence>

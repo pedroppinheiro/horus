@@ -7,14 +7,17 @@ import br.gol.horus.driver.DriverVO;
 import br.gol.horus.elementos.gol.paginas.AbrirGeracaoFolhaPage;
 import br.gol.horus.elementos.gol.paginas.LoginPage;
 import br.gol.horus.elementos.gol.paginas.TabelasGeracaoFolhaPage;
-import io.cucumber.core.api.Scenario;
+import io.cucumber.java.Scenario;
+import io.cucumber.java.pt.Dada;
+import io.cucumber.java.pt.Dado;
+import io.cucumber.java.pt.Entao;
+import io.cucumber.java.pt.Quando;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java8.Pt;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class FolhaSteps implements Pt {
+public class FolhaSteps {
 	
 	DriverVO driverVO;
 	
@@ -29,6 +32,49 @@ public class FolhaSteps implements Pt {
 		driverVO = DriverFactory.createDriverVO();
     }
 	
+	@Dada("a pagina de {string}")
+	public void a_pagina_de(String string) throws Exception {
+		loginPage = new LoginPage(driverVO);
+		abrirGeracaoFolhaPage = (AbrirGeracaoFolhaPage) loginPage.acessarPagina(string);
+	}
+
+	@Dado("eu possuo gerações fechadas")
+	public void eu_possuo_gerações_fechadas() {
+		assertThat("Deve haver gerações abertas",
+	    		   abrirGeracaoFolhaPage.getQuantidadeGeracoesFechadas(),
+	               greaterThan(1));
+	}
+
+	@Quando("eu seleciono a geração de folha fechada mais atual")
+	public void eu_seleciono_a_geração_de_folha_fechada_mais_atual() throws Exception {
+		primeiraGeracaoFolhaNome = abrirGeracaoFolhaPage.selecionarPrimeiraGeracao();
+	}
+
+	@Quando("clico no botão de Abrir Geração de Folha")
+	public void clico_no_botão_de_Abrir_Geração_de_Folha() throws Exception {
+		abrirGeracaoFolhaPage.abrirGeracaoFolha();
+	}
+
+	@Quando("clico em Ok")
+	public void clico_em_Ok() throws Exception {
+		abrirGeracaoFolhaPage.clicarOk();	}
+
+	@Quando("acesso a pagina de {string}")
+	public void acesso_a_pagina_de(String string) throws Exception {
+		tabelasGeracaoFolhaPage = (TabelasGeracaoFolhaPage) abrirGeracaoFolhaPage.acessarPagina(string);
+	}
+
+	@Quando("filtro a tabela pela geração")
+	public void filtro_a_tabela_pela_geração() throws Exception {
+		tabelasGeracaoFolhaPage.filtrarTabelaGeracaoFolha(primeiraGeracaoFolhaNome);
+	}
+
+	@Entao("encontro a geracao pesquisada")
+	public void encontro_a_geracao_pesquisada() {
+		assertEquals("Quantidade de registros deve ser limita a 1", 1, tabelasGeracaoFolhaPage.obterQuantidadeDeRegistros());
+	}
+	
+	/**
 	public FolhaSteps() {
 		
 		Dada("a pagina de {string}", (String string) -> {
@@ -67,11 +113,10 @@ public class FolhaSteps implements Pt {
 		});
 
 	}
+	**/
 	
 	@After
     public void afterScenario(Scenario scenario) {
-		System.out.println("STAAAAAAAAAAATUS: " + scenario.getStatus());
-		
 		if(scenario.isFailed()) {
 			if(loginPage != null) {
 				loginPage.mostrarDetalhesModalErro();

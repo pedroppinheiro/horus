@@ -128,8 +128,6 @@ public abstract class GOLPage extends PageObjectBase {
 		if (processandoApareceu(timeoutComecarProcessar)) {
 			isProcessandoApareceu = true;
 		} else {
-			String errorMsg = "Processando era esperado, porém não foi encontrado no timeout de " + timeoutComecarProcessar.getSeconds() + " segundos";
-			LOGGER.severe(errorMsg);
 			if(!shouldIgnoreExceptions) {
 				throw new Exception("Erro no método aguardarProcessando");
 			}
@@ -139,19 +137,9 @@ public abstract class GOLPage extends PageObjectBase {
 			LOGGER.info("PROCESSANDO: Aguardando finalizar processamento");
 			//if (!processandoConcluiu() && !shouldIgnoreExceptions) {
 			if (!processandoConcluiu(timeoutFinalizarProcessar)) {
-				String errorMsg = "Processando era esperado finalizar, porém ainda sendo exibido. Timeout: " + timeoutFinalizarProcessar.getSeconds() + " segundos";
-				LOGGER.severe(errorMsg);
 				throw new Exception("Erro no método aguardarProcessando");
 			}
 		}
-	}
-	
-	public void alterarScriptTimeout(Duration seconds) {
-		this.getDriverVO().getWebDriver().manage().timeouts().setScriptTimeout(seconds.getSeconds(), TimeUnit.SECONDS);
-	}
-	
-	public void alterarScriptTimeoutParaPadrao() {
-		this.getDriverVO().getWebDriver().manage().timeouts().setScriptTimeout(Constantes.SCRIPT_TIMEOUT.getSeconds(), TimeUnit.SECONDS);
 	}
 
 	private boolean processandoApareceu(Duration timeoutInSeconds) {
@@ -176,6 +164,11 @@ public abstract class GOLPage extends PageObjectBase {
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "Processando era esperado, porém não iniciou", e);
 		}
+		
+		if(!isProcessandoExibido) {
+			LOGGER.severe("Processando era esperado, porém não foi encontrado no timeout de " + timeoutInSeconds.getSeconds() + " segundos");
+		}
+		
 		this.alterarScriptTimeoutParaPadrao(); //retornando configuração para o valor padrão
 		return isProcessandoExibido;
 	}
@@ -197,8 +190,21 @@ public abstract class GOLPage extends PageObjectBase {
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "Processando não finalizou", e);
 		}
+		
+		if(!isProcessandoConcluido) {
+			LOGGER.severe("Processando era esperado finalizar, porém ainda sendo exibido. Timeout: " + timeoutInSeconds.getSeconds() + " segundos");
+		}
+		
 		this.alterarScriptTimeoutParaPadrao(); //retornando configuração para o valor padrão
 		return isProcessandoConcluido;
+	}
+	
+	public void alterarScriptTimeout(Duration seconds) {
+		this.getDriverVO().getWebDriver().manage().timeouts().setScriptTimeout(seconds.getSeconds(), TimeUnit.SECONDS);
+	}
+	
+	public void alterarScriptTimeoutParaPadrao() {
+		this.getDriverVO().getWebDriver().manage().timeouts().setScriptTimeout(Constantes.SCRIPT_TIMEOUT.getSeconds(), TimeUnit.SECONDS);
 	}
 
 	public void refresh() {

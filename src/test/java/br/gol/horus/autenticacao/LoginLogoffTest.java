@@ -8,9 +8,12 @@ import io.cucumber.junit.Cucumber;
 @RunWith(Cucumber.class)
 @CucumberOptions(
 		plugin = {"pretty",
+				 "junit:target/cucumber/reports/LoginLogoff/junit.xml",
 				 "html:target/cucumber/reports/LoginLogoff"
                   },
-		dryRun = true
+		dryRun = false,
+		monochrome=true,
+		strict=true
 		)
 public class LoginLogoffTest {
 

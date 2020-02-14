@@ -8,9 +8,12 @@ import io.cucumber.junit.Cucumber;
 @RunWith(Cucumber.class)
 @CucumberOptions(
 		plugin = {"pretty",
+				 "junit:target/cucumber/reports/FolhaTest/junit.xml",
 				 "html:target/cucumber/reports/FolhaTest"
                   },
-		dryRun = false
+		dryRun = false,
+		monochrome=true,
+		strict=true
 		)
 public class FolhaTest {
 

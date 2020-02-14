@@ -33,7 +33,7 @@ public class LoginPage extends GOLPage {
 		this.btnEntrar.click();
 		GOLPage homePage = null;
 		try {
-			homePage = new HomePage(this.getDriverVO(), false, Duration.ofSeconds(5), Duration.ofSeconds(10));
+			homePage = new HomePage(this.getDriverVO(), Duration.ofSeconds(7), Duration.ofSeconds(10));
 		} catch(TimeoutException te) {
 			te.printStackTrace();
 			return this;

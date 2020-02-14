@@ -4,7 +4,7 @@ package br.gol.horus.elementos.base;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -86,8 +86,20 @@ public abstract class PageObjectBase {
 	 * @param args
 	 * @return objeto de retorno do script se tiver algum
 	 */
-	public Object executeAsyncScript(String script, Object... args) {
+	private Object executeAsyncScript(String script, Object... args) {
 		return driverVO.getJavascriptExecutor().executeAsyncScript(script, args);
+	}
+	
+	public Object executeAsyncScript(String script, Duration timeoutInSeconds, Object... args) {
+		this.alterarScriptTimeout(timeoutInSeconds);
+		Object retorno;
+		try {
+			retorno = executeAsyncScript(script, args);
+		} catch (Exception e) {
+			this.alterarScriptTimeoutParaPadrao();
+			throw e;
+		}
+		return retorno;
 	}
 	
 	public void waitSeconds(int seconds) {
@@ -144,5 +156,13 @@ public abstract class PageObjectBase {
 				.withTimeout(Duration.ofSeconds(timeout))
 				.pollingEvery(Duration.ofMillis(pollingEvery))
 				.until(condition);
+	}
+	
+	public void alterarScriptTimeout(Duration seconds) {
+		this.getDriverVO().getWebDriver().manage().timeouts().setScriptTimeout(seconds.getSeconds(), TimeUnit.SECONDS);
+	}
+	
+	public void alterarScriptTimeoutParaPadrao() {
+		this.getDriverVO().getWebDriver().manage().timeouts().setScriptTimeout(Constantes.SCRIPT_TIMEOUT.getSeconds(), TimeUnit.SECONDS);
 	}
 }

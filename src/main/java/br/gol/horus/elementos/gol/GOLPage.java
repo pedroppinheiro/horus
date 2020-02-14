@@ -122,36 +122,30 @@ public abstract class GOLPage extends PageObjectBase {
 		if(timeoutComecarProcessar != null && timeoutComecarProcessar.isZero()) {
 			return;
 		}
-		LOGGER.info("PROCESSANDO : Aguardando processando" + (!shouldIgnoreExceptions ? ". Serão lançadas falhas caso o processando não seja encontrado corretamente" : ""));
-		boolean isProcessandoApareceu = false;
-
-		if (processandoApareceu(timeoutComecarProcessar)) {
-			isProcessandoApareceu = true;
-		} else {
-			if(!shouldIgnoreExceptions) {
-				throw new Exception("Erro no método aguardarProcessando");
-			}
-		}
 		
-		if(isProcessandoApareceu) {
-			LOGGER.info("PROCESSANDO: Aguardando finalizar processamento");
-			//if (!processandoConcluiu() && !shouldIgnoreExceptions) {
-			if (!processandoConcluiu(timeoutFinalizarProcessar)) {
-				throw new Exception("Erro no método aguardarProcessando");
+		LOGGER.info("PROCESSANDO : Aguardando processando" + (!shouldIgnoreExceptions ? ". Serão lançadas falhas caso o processando não seja encontrado corretamente" : ""));
+		
+		try {
+			if(processandoApareceu(timeoutComecarProcessar) && processandoConcluiu(timeoutFinalizarProcessar)) {
+				LOGGER.info("Processando detectado e finalizado com sucesso!");
+			}
+		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Erro ao verificar o modal de processando", e);
+			if(!shouldIgnoreExceptions) {
+				throw e;
 			}
 		}
 	}
 
-	private boolean processandoApareceu(Duration timeoutInSeconds) {
+	private boolean processandoApareceu(Duration timeoutInSeconds) throws Exception {
 		timeoutInSeconds = timeoutInSeconds == null ? Constantes.TIMEOUT_AGUARDAR_EXIBICAO_PROCESSANDO : timeoutInSeconds;
 		
-		this.alterarScriptTimeout(timeoutInSeconds); // alterando timeout de script para a verificação do processando
 		boolean isProcessandoExibido = false;
 		try {
 			isProcessandoExibido = (Boolean) this.executeAsyncScript("var callback = arguments[arguments.length - 1];\r\n" + "\r\n"
 					+ "var interval = setInterval(function(){ if(processando) {\r\n"
 					+ "		clearInterval(interval);\r\n" + "		callback(true);\r\n" + "	}\r\n"
-					+ "}, 250);");
+					+ "}, 250);", timeoutInSeconds);
 			if(isProcessandoExibido) {
 				LOGGER.info("PROCESSANDO: Processando exibido");
 			}
@@ -161,50 +155,45 @@ public abstract class GOLPage extends PageObjectBase {
 			isProcessandoExibido = processandoApareceu(timeoutInSeconds);
 		} catch (org.openqa.selenium.ScriptTimeoutException ste) {
 			LOGGER.log(Level.SEVERE, "Processando não foi exibido dentro do tempo esperado", ste);
+			throw new Exception("ScriptTimeoutException: Processando não foi exibido dentro do tempo esperado", ste);
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "Processando era esperado, porém não iniciou", e);
+			throw new Exception("Processando era esperado, porém não iniciou", e);
 		}
 		
 		if(!isProcessandoExibido) {
 			LOGGER.severe("Processando era esperado, porém não foi encontrado no timeout de " + timeoutInSeconds.getSeconds() + " segundos");
 		}
 		
-		this.alterarScriptTimeoutParaPadrao(); //retornando configuração para o valor padrão
 		return isProcessandoExibido;
 	}
 
-	private boolean processandoConcluiu(Duration timeoutInSeconds) {
+	private boolean processandoConcluiu(Duration timeoutInSeconds) throws Exception {
 		timeoutInSeconds = timeoutInSeconds == null ? Constantes.TIMEOUT_AGUARDAR_FINALIZACAO_PROCESSANDO : timeoutInSeconds;
 		
-		this.alterarScriptTimeout(timeoutInSeconds); // alterando timeout de script para a verificação do processando
 		boolean isProcessandoConcluido = false;
 		try {
 			isProcessandoConcluido = (Boolean) this.executeAsyncScript("var callback = arguments[arguments.length - 1];\r\n" + "\r\n"
 					+ "var interval = setInterval(function(){ if(!processando) {\r\n"
-					+ "		clearInterval(interval);\r\n" + "		callback(true);\r\n" + "	}\r\n" + "}, 250);");
+					+ "		clearInterval(interval);\r\n" + "		callback(true);\r\n" + "	}\r\n" + "}, 250);", timeoutInSeconds);
 			if(isProcessandoConcluido) {
 				LOGGER.info("PROCESSANDO: Processamento finalizado");
 			}
+			
+		
 		} catch (org.openqa.selenium.ScriptTimeoutException ste) {
 			LOGGER.log(Level.SEVERE, "Processando não finalizou dentro do tempo esperado", ste);
+			throw new Exception("ScriptTimeoutException: Processando não finalizou dentro do tempo esperado", ste);
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "Processando não finalizou", e);
+			throw new Exception("Processando não finalizou", e);
 		}
 		
 		if(!isProcessandoConcluido) {
 			LOGGER.severe("Processando era esperado finalizar, porém ainda sendo exibido. Timeout: " + timeoutInSeconds.getSeconds() + " segundos");
 		}
 		
-		this.alterarScriptTimeoutParaPadrao(); //retornando configuração para o valor padrão
 		return isProcessandoConcluido;
-	}
-	
-	public void alterarScriptTimeout(Duration seconds) {
-		this.getDriverVO().getWebDriver().manage().timeouts().setScriptTimeout(seconds.getSeconds(), TimeUnit.SECONDS);
-	}
-	
-	public void alterarScriptTimeoutParaPadrao() {
-		this.getDriverVO().getWebDriver().manage().timeouts().setScriptTimeout(Constantes.SCRIPT_TIMEOUT.getSeconds(), TimeUnit.SECONDS);
 	}
 
 	public void refresh() {

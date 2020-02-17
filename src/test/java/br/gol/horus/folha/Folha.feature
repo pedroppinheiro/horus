@@ -2,7 +2,7 @@
 Funcionalidade: Folha
 Testes de folha
 
-	Cenário: Abrir geração de folha folha
+	Cenário: Abrir geração de folha
 		Dada a pagina de "Abrir Geração de Folha"
 		Dado eu possuo gerações fechadas
 		Quando eu seleciono a geração de folha fechada mais atual

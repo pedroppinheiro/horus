@@ -130,7 +130,6 @@ public abstract class GOLPage extends PageObjectBase {
 				LOGGER.info("Processando detectado e finalizado com sucesso!");
 			}
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Erro ao verificar o modal de processando", e);
 			if(!shouldIgnoreExceptions) {
 				throw e;
 			}
@@ -154,10 +153,10 @@ public abstract class GOLPage extends PageObjectBase {
 			LOGGER.log(Level.SEVERE, "Processando era esperado, porém ocorreu erro de JavascriptException. Tentando novamente. Detalhes: " + je.getMessage());
 			isProcessandoExibido = processandoApareceu(timeoutInSeconds);
 		} catch (org.openqa.selenium.ScriptTimeoutException ste) {
-			LOGGER.log(Level.SEVERE, "Processando não foi exibido dentro do tempo esperado", ste);
+			LOGGER.log(Level.SEVERE, "Processando não foi exibido dentro do tempo esperado. Detalhes: " + ste.getMessage());
 			throw new Exception("ScriptTimeoutException: Processando não foi exibido dentro do tempo esperado", ste);
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Processando era esperado, porém não iniciou", e);
+			LOGGER.log(Level.SEVERE, "Processando era esperado, porém não iniciou. Detalhes: " + e.getMessage());
 			throw new Exception("Processando era esperado, porém não iniciou", e);
 		}
 		
@@ -182,10 +181,10 @@ public abstract class GOLPage extends PageObjectBase {
 			
 		
 		} catch (org.openqa.selenium.ScriptTimeoutException ste) {
-			LOGGER.log(Level.SEVERE, "Processando não finalizou dentro do tempo esperado", ste);
+			LOGGER.log(Level.SEVERE, "Processando não finalizou dentro do tempo esperado. Detalhes: " + ste.getMessage());
 			throw new Exception("ScriptTimeoutException: Processando não finalizou dentro do tempo esperado", ste);
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Processando não finalizou", e);
+			LOGGER.log(Level.SEVERE, "Processando não finalizou. Detalhes: " + e.getMessage());
 			throw new Exception("Processando não finalizou", e);
 		}
 		

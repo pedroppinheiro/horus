@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import br.gol.horus.driver.DriverFactory;
 import br.gol.horus.driver.DriverVO;
 import br.gol.horus.elementos.gol.paginas.AbrirGeracaoFolhaPage;
+import br.gol.horus.elementos.gol.paginas.HomePage;
 import br.gol.horus.elementos.gol.paginas.LoginPage;
 import br.gol.horus.elementos.gol.paginas.TabelasGeracaoFolhaPage;
 import io.cucumber.java.Scenario;
@@ -28,13 +29,13 @@ public class FolhaSteps {
 	String primeiraGeracaoFolhaNome;
 	
 	@Before
-    public void beforeScenario() {
-		driverVO = DriverFactory.createDriverVO();
+    public void beforeScenario() throws Exception {
+		driverVO = DriverFactory.createDriverVO();	
+		loginPage = new LoginPage(driverVO);
     }
 	
 	@Dada("a pagina de {string}")
 	public void a_pagina_de(String string) throws Exception {
-		loginPage = new LoginPage(driverVO);
 		abrirGeracaoFolhaPage = (AbrirGeracaoFolhaPage) loginPage.acessarPagina(string);
 	}
 

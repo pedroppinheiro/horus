@@ -21,6 +21,8 @@ public class LoginPage extends GOLPage {
 	@FindBy(id = "btnEntrar") WebElement btnEntrar;
 	@FindBy(className = "login-form") WebElement formularioLogin;
 	
+	private HomePage homePage = null;
+	
 	public LoginPage(DriverVO driverVO) throws Exception {
 		super(driverVO, Duration.ZERO);
 		acessarURL(Constantes.SYSTEM_UNDER_TEST_URL);
@@ -47,7 +49,10 @@ public class LoginPage extends GOLPage {
 	
 	@Override
 	public GOLPage acessarPagina(DominioPaginas pagina) throws Exception {
-		GOLPage homePage = login();
+		if(homePage == null) {
+			homePage = (HomePage) login();
+		}
+		
 		return homePage.acessarPagina(pagina);
 	}
 	

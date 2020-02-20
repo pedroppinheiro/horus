@@ -19,7 +19,7 @@ public class ModalVgolMensagemComponente extends GOLComponent {
 	}
 	
 	public void confirmar() {
-		waitUntil(ExpectedConditions.visibilityOf(modalVgolMensagem));
+		waitUntil(ExpectedConditions.visibilityOf(modalVgolMensagem),5);
 		botaoOkModalVgolMensagem.click();
 	}
 	

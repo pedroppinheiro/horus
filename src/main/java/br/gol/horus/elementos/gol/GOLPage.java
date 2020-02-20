@@ -226,4 +226,8 @@ public abstract class GOLPage extends PageObjectBase {
 			}
 		}
 	}
+	
+	public void logout() {
+		this.executeScript("logout();");
+	}
 }

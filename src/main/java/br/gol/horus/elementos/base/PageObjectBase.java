@@ -50,9 +50,9 @@ public abstract class PageObjectBase {
 	 * Tempo de pooling é o padrão definido nas configurações do projeto
 	 * @param condition
 	 */	
-	public void waitUntil(ExpectedCondition<?> condition, int timeout) {
+	public void waitUntil(ExpectedCondition<?> condition, int timeoutInSeconds) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driverVO.getWebDriver())
-				.withTimeout(Duration.ofSeconds(timeout))
+				.withTimeout(Duration.ofSeconds(timeoutInSeconds))
 				.pollingEvery(Constantes.EXPLICIT_WAITING_TIME_POLLING_INTERVAL);
 				//.ignoring(Exception.class);
 		wait.until(condition);

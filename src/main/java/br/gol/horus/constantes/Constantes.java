@@ -26,8 +26,8 @@ public final class Constantes {
 	public static final Duration AJAX_ELEMENT_LOCATOR_FACTORY_TIMEOUT = Duration.ofSeconds(2);
 	public static final Duration DOWNLOAD_WAITING_TIME = Duration.ofSeconds(60);
 	
-	public static final String CHROME_DRIVER_LOCATION = "./src/test/resources/chromedriver.exe";
-	public static final String FIREFOX_DRIVER_LOCATION = "./src/test/resources/geckodriver-v0.25.0-win64.exe";
+	public static final String CHROME_DRIVER_NAME = "chromedriver.exe"; //"./src/test/resources/drivers/chromedriver.exe";
+	public static final String FIREFOX_DRIVER_NAME = "geckodriver-v0.25.0-win64.exe"; //"./src/test/resources/drivers/geckodriver-v0.25.0-win64.exe";
 
 	public static final String DATABASE_CONNECTION_HOST = "localhost";
 	public static final String DATABASE_CONNECTION_PORT = "1433";
@@ -40,4 +40,5 @@ public final class Constantes {
 	public static final String SCREENSHOTS_PATH = System.getProperty("user.home") + "\\horus\\SCREENSHOTS";
 
 	public static final String DEFAULT_FILE_ERROR_NAME = "unexpected_error.png";
+	
 }

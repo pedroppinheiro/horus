@@ -1,7 +1,8 @@
-package br.gol.horus.autenticacao;
+package br.gol.horus.steps;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -31,25 +32,23 @@ public class LoginLogoffSteps {
 	
 	public static final Logger LOGGER = Logger.getLogger(LoginLogoffSteps.class.getName());
 	
-	DriverVO driverVO;
-	
-	LoginPage loginPage;
+	private ScenarioContext context;
+	 
+    public LoginLogoffSteps(ScenarioContext context) {
+        this.context = context;
+    }
+    
 	HomePage homePage;
 	GOLPage pagina;
 	
-	@Before
-    public void beforeScenario() {
-		driverVO = DriverFactory.createDriverVO();
-    }
-	
 	@Dada("a pagina de login do GOL")
 	public void a_pagina_de_login_do_GOL() throws Exception {
-		loginPage = new LoginPage(driverVO);
+		assertNotNull(context.loginPage);
 	}
 
 	@Quando("eu entro com minhas credenciais {string} e {string}")
 	public void eu_entro_com_minhas_credenciais_e(String usuario, String senha) throws Exception {
-		pagina = loginPage.login(usuario, senha);
+		pagina = context.loginPage.login(usuario, senha);
 	}
 
 	@Entao("sou direcionado para a home page")
@@ -72,18 +71,6 @@ public class LoginLogoffSteps {
 			fail("Cliente esperado: " + clienteEsperadoMensagem + "\nCliente encontrado: " + clienteEncontradoMensagem);
 		}
 	}
-	
-	@After
-    public void afterScenario(Scenario scenario) {
-		if(scenario.isFailed()) {
-			if(loginPage != null) {
-				loginPage.mostrarDetalhesModalErro();
-			}
-			this.driverVO.tirarScreenshot(scenario.getName());
-		}
-		
-		this.driverVO.destroyDriverVO();
-    }
 
 }
 

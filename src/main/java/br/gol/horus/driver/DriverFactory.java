@@ -117,7 +117,7 @@ public class DriverFactory {
 
 	@SuppressWarnings("unused")
 	private static DriverVO firefoxDriver() {
-		System.setProperty("webdriver.gecko.driver", Constantes.FIREFOX_DRIVER_LOCATION);
+		System.setProperty("webdriver.gecko.driver", ClassLoader.getSystemResource("drivers/" + Constantes.FIREFOX_DRIVER_NAME).getPath());
 		
 		FirefoxOptions firefoxOptions = createFirefoxOptions();
 
@@ -155,7 +155,7 @@ public class DriverFactory {
 	@SuppressWarnings("unused")
 	@Deprecated
 	private static DriverVO chromeDriver() {
-		System.setProperty("webdriver.chrome.driver", Constantes.CHROME_DRIVER_LOCATION);
+		System.setProperty("webdriver.chrome.driver", ClassLoader.getSystemResource("drivers/" + Constantes.CHROME_DRIVER_NAME).getPath());
 		ChromeOptions chromeOptions = new ChromeOptions();
 		chromeOptions.setHeadless(true); // só funciona com headless = true no chrome
 		WebDriver driver = new ChromeDriver(chromeOptions);

@@ -120,6 +120,9 @@ public abstract class GOLPage extends PageObjectBase {
 	}
 	
 	public void aguardarProcessando(boolean shouldIgnoreExceptions, Duration timeoutComecarProcessar, Duration timeoutFinalizarProcessar) throws Exception {
+		
+		this.waitUntilPageLoadComplete(10); //PAGE_LOAD_TIMEOUT
+		
 		if(timeoutComecarProcessar != null && timeoutComecarProcessar.isZero()) {
 			return;
 		}

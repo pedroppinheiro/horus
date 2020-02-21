@@ -173,9 +173,9 @@ public abstract class PageObjectBase {
 				TimeUnit.SECONDS);
 	}
 
-	public void untilJqueryIsDone(int timeoutInSeconds) {
+	public void waitUntilJqueryIsDone(int timeoutInSeconds) {
 		this.waitUntil((driver) -> {
-			Boolean isJqueryCallDone = (Boolean) executeScript("return jQuery.active==0");
+			Boolean isJqueryCallDone = (Boolean) executeScript("return jQuery.active===0");
 			if (!isJqueryCallDone) {
 				LOGGER.info("JQuery call is in Progress");
 			}
@@ -183,12 +183,12 @@ public abstract class PageObjectBase {
 		}, timeoutInSeconds);
 	}
 
-	public void untilPageLoadComplete(int timeoutInSeconds) {
+	public void waitUntilPageLoadComplete(int timeoutInSeconds) {
 		this.waitUntil((driver) -> {
 			Boolean isPageLoaded = (Boolean) executeScript("return document.readyState").equals("complete");
-			if (!isPageLoaded) {
+			//if (!isPageLoaded) {
 				LOGGER.info("Document is loading");
-			}
+			//}
 			return isPageLoaded;
 		}, timeoutInSeconds);
 	}

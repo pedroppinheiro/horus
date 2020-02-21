@@ -30,8 +30,7 @@ public class GeneralSteps {
 		LOGGER.info("------------------------------");
 	    
 		context.driverVO = DriverFactory.createDriverVO();
-	    context.loginPage = new LoginPage(context.driverVO);
-	    context.paginaAtual = context.loginPage;
+	    context.paginaAtual = new LoginPage(context.driverVO);
     }
 	
 	@Dada("a pagina de {string}")
@@ -50,8 +49,8 @@ public class GeneralSteps {
 		LOGGER.info(scenario.getName() + " Status - " + scenario.getStatus());
 		LOGGER.info("------------------------------");
 		if(scenario.isFailed()) {
-			if(context.loginPage != null) {
-				context.loginPage.mostrarDetalhesModalErro();
+			if(context.paginaAtual != null) {
+				context.paginaAtual.mostrarDetalhesModalErro();
 			}
 			context.driverVO.tirarScreenshot(scenario.getName());
 		}

@@ -37,29 +37,25 @@ public class LoginLogoffSteps {
     public LoginLogoffSteps(ScenarioContext context) {
         this.context = context;
     }
-    
-	HomePage homePage;
-	GOLPage pagina;
 	
 	@Dada("a pagina de login do GOL")
 	public void a_pagina_de_login_do_GOL() throws Exception {
-		assertNotNull(context.loginPage);
+		assertNotNull(context.paginaAtual);
 	}
 
 	@Quando("eu entro com minhas credenciais {string} e {string}")
-	public void eu_entro_com_minhas_credenciais_e(String usuario, String senha) throws Exception {
-		pagina = context.loginPage.login(usuario, senha);
+	public void eu_entro_com_minhas_credenciais(String usuario, String senha) throws Exception {
+		context.paginaAtual = ((LoginPage) context.paginaAtual).login(usuario, senha);
 	}
 
 	@Entao("sou direcionado para a home page")
 	public void sou_direcionado_para_a_home_page() {
-		assertTrue(pagina instanceof HomePage);
-		homePage = (HomePage) pagina;
+		assertTrue(context.paginaAtual instanceof HomePage);
 	}
 
 	@Entao("o header exibe o nome do cliente correto")
 	public void o_header_exibe_o_nome_do_cliente_correto() {
-		String nomeClienteObtido = homePage.getNomeCliente();
+		String nomeClienteObtido = ((HomePage) context.paginaAtual).getNomeCliente();
 		Optional<ClientesEnum> clienteEsperado = ClientesEnum.getById(Constantes.CLIENTE_ID);
 		Optional<ClientesEnum> clienteObtido = ClientesEnum.getByNome(nomeClienteObtido);
 		try {
@@ -70,6 +66,17 @@ public class LoginLogoffSteps {
 			LOGGER.log(Level.SEVERE, "Falha ao comparar os nomes de cliente esperado com o obtido", nsee);
 			fail("Cliente esperado: " + clienteEsperadoMensagem + "\nCliente encontrado: " + clienteEncontradoMensagem);
 		}
+	}
+	
+	@Quando("eu realizo o logoff")
+	public void realizarLogoff() throws Exception {
+		context.paginaAtual = context.paginaAtual.logout();
+	}
+	
+	@Entao("sou redirecionado para a página de login")
+	public void checarPaginaDeLogin() {
+		assertTrue(((LoginPage) context.paginaAtual).isFormularioExibido());
+		assertTrue(((LoginPage) context.paginaAtual).isInLoginPage());
 	}
 
 }

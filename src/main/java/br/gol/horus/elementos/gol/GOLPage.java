@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import br.gol.horus.constantes.Constantes;
 import br.gol.horus.driver.DriverVO;
 import br.gol.horus.elementos.base.PageObjectBase;
+import br.gol.horus.elementos.gol.paginas.LoginPage;
 import br.gol.horus.helpers.ClientesEnum;
 import br.gol.horus.helpers.DominioPaginas;
 
@@ -227,7 +228,8 @@ public abstract class GOLPage extends PageObjectBase {
 		}
 	}
 	
-	public void logout() {
+	public LoginPage logout() throws Exception {
 		this.executeScript("logout();");
+		return new LoginPage(driverVO);
 	}
 }

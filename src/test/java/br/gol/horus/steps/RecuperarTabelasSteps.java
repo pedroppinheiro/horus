@@ -20,7 +20,6 @@ import io.cucumber.java.Before;
 public class RecuperarTabelasSteps {
 	
 	ScenarioContext context;
-	SalvarRecuperarPage salvarRecuperarPage;
 	
 	 public RecuperarTabelasSteps(ScenarioContext context) {
         this.context = context;
@@ -28,23 +27,22 @@ public class RecuperarTabelasSteps {
 		db.execute(
 				String.format("truncate table %s.%s.TAB_CNT_4MRelConteudo", Constantes.DATABASE_NAME, Constantes.DATABASE_SCHEMA)
 				);
-		salvarRecuperarPage = (SalvarRecuperarPage) context.paginaAtual;
     }
 
 	@Quando("eu preencho o limite de registros para {string}")
 	public void eu_preencho_o_limite_de_registros_para(String limiteDeRegistros) throws Exception {
-		salvarRecuperarPage.informarLimiteDeRegistros(limiteDeRegistros);
+		((SalvarRecuperarPage) context.paginaAtual).informarLimiteDeRegistros(limiteDeRegistros);
 	}
 
 	@Quando("recupero tabelas projeto")
 	public void clico_no_botão_de_Recuperar_Tabelas_Projeto() throws Exception {
-		salvarRecuperarPage.recuperarTabelasProjeto();
-		salvarRecuperarPage.confirmarExecucao();
+		((SalvarRecuperarPage) context.paginaAtual).recuperarTabelasProjeto();
+		((SalvarRecuperarPage) context.paginaAtual).confirmarExecucao();
 	}
 
 	@Entao("nenhuma mensagem de erro é exibida")
 	public void nenhuma_mensagem_de_erro_é_exibida() {
-		assertFalse("A mensagem de erro não deve ser exibida", salvarRecuperarPage.isMensagemErroExibida());
+		assertFalse("A mensagem de erro não deve ser exibida", ((SalvarRecuperarPage) context.paginaAtual).isMensagemErroExibida());
 	}
 	
 }
